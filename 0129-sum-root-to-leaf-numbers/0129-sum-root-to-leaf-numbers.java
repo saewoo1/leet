@@ -15,24 +15,23 @@
  */
 import java.util.*;
 class Solution {
-    public int sumNumbers(TreeNode root) {
-       int sum=0;
-       Queue<TreeNode>q=new LinkedList();
-       q.offer(root);
-       while(!q.isEmpty()){
-           TreeNode node=q.poll();
-           if(node.right==null && node.left==null){
-               sum+=node.val;
-           }
-            if(node.left!=null){
-                node.left.val+=node.val*10;
-                q.offer(node.left);
-            }
-            if(node.right!=null){
-                node.right.val+=node.val*10;
-                q.offer(node.right);
-            }
-       }
-       return sum; 
-    }
+    public int sum(TreeNode root, String value) {
+		if (root == null) {
+			return 0;
+		}
+        value += root.val;
+		// String 취급 -> 해당 값을 뒤에 이어붙인 뒤 int 변환 후 반환
+		if (root.left == null && root.right == null) {
+			return Integer.parseInt(value);
+		}
+		return sum(root.left, value) + sum(root.right, value);
+
+	}
+
+	public int sumNumbers(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		return sum(root, "");
+	}
 }

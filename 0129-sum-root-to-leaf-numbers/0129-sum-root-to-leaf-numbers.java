@@ -13,22 +13,26 @@
  *     }
  * }
  */
+import java.util.*;
 class Solution {
-    public int sumTree(TreeNode root,int sum){
-        if(root == null) {
-            return 0;
-        }
-        sum = sum * 10 + root.val;
-        if(root.left == null && root.right == null) {
-            return sum;
-        }
-        return sumTree(root.left, sum) + sumTree(root.right, sum);
-    }
     public int sumNumbers(TreeNode root) {
-        if(root == null) {
-            return 0;
-        }
-        return sumTree(root,0);
+       int sum=0;
+       Queue<TreeNode>q=new LinkedList();
+       q.offer(root);
+       while(!q.isEmpty()){
+           TreeNode node=q.poll();
+           if(node.right==null && node.left==null){
+               sum+=node.val;
+           }
+            if(node.left!=null){
+                node.left.val+=node.val*10;
+                q.offer(node.left);
+            }
+            if(node.right!=null){
+                node.right.val+=node.val*10;
+                q.offer(node.right);
+            }
+       }
+       return sum; 
     }
-
 }

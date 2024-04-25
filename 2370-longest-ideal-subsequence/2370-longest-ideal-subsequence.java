@@ -1,18 +1,22 @@
+import java.util.*;
+
 class Solution {
     public int longestIdealString(String s, int k) {
-		int[] dp = new int[26];
+		Map<Character, Integer> characterLengthMap = new HashMap<>();
 		for (char c : s.toCharArray()) {
-			int maxLen = 0;
+			int currentMaxLen = 1;
 
-			for (int i = Math.max(0, c - 'a' - k); i <= Math.min(25, c - 'a' + k); i++) {
-				maxLen = Math.max(maxLen, dp[i]);
+			for (Entry<Character, Integer> entry : characterLengthMap.entrySet()) {
+				if (Math.abs(entry.getKey() - c) <= k) {
+					currentMaxLen = Math.max(currentMaxLen, entry.getValue() + 1);
+				}
 			}
-			dp[c - 'a'] = maxLen + 1;
+			characterLengthMap.put(c, currentMaxLen);
 		}
-		int longest = 0;
-		for (int length : dp) {
-			longest = Math.max(longest, length);
+		int maxLen = 1;
+		for (Entry<Character, Integer> entry : characterLengthMap.entrySet()) {
+			maxLen = Math.max(entry.getValue(), maxLen);
 		}
-		return longest;
+		return maxLen;
     }
 }

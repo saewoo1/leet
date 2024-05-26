@@ -1,32 +1,36 @@
-class Solution {
-    private int minSum = Integer.MAX_VALUE; // 최소 합을 저장할 변수
-    private int[][] grid;
-    private int m, n;
+import java.util.*;
 
-    public int minPathSum(int[][] grid) {
-        this.grid = grid;
-        m = grid.length;
-        n = grid[0].length;
-        dfs(0, 0, 0); // 시작 위치와 초기 합으로 DFS 시작
-        return minSum;
-    }
-    
-    private void dfs(int i, int j, int sum) {
-        // 현재 위치가 그리드를 벗어나면 종료
-        if (i >= m || j >= n) return;
-        
-        // 현재 위치까지의 합을 갱신
-        sum += grid[i][j];
-        
-        // 목적지에 도달했을 때, 최소 합을 갱신
-        if (i == m-1 && j == n-1) {
-            minSum = Math.min(minSum, sum);
-            return;
-        }
-        
-        // 오른쪽으로 이동
-        dfs(i, j+1, sum);
-        // 아래로 이동
-        dfs(i+1, j, sum);
+class Solution {
+    public int minPathSum(int[][]grid) {
+        int m = grid.length;
+		int n = grid[0].length;
+
+		PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a[2]));
+		boolean[][] visited = new boolean[m][n];
+		// x, y, 경로 합에 대한 초기 세팅
+		queue.offer(new int[]{0, 0, grid[0][0]});
+		visited[0][0] = true;
+
+		// down / right
+		int[][] dirs = {{1, 0}, {0, 1}};
+
+		while (!queue.isEmpty()) {
+			// x, y, 경로 합
+			int[] current = queue.poll();
+
+			if (current[0] == (m - 1) && current[1] == (n - 1)) {
+				return current[2];
+			}
+			for (int[] dir : dirs) {
+				int nx = current[0] + dir[0];
+				int ny = current[1] + dir[1];
+
+				if (nx >= 0 && nx < m && ny >= 0 && ny < n && !visited[nx][ny]) {
+					visited[nx][ny] = true;
+					queue.offer(new int[]{nx, ny, grid[nx][ny] + current[2]});
+				}
+			}
+		}
+		return -1;
     }
 }

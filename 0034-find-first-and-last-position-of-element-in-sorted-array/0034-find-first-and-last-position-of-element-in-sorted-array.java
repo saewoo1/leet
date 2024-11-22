@@ -5,20 +5,34 @@ class Solution {
     log n 복잡도를 보장해야한다.
      */
     public int[] searchRange(int[] nums, int target) {
-        int start = -1;
-        for (int i = 0; i < nums.length; i++) {
-            if (nums[i] == target) {
-                start = i;
-                break;
+        if (nums.length == 0) {
+            return new int[]{-1, -1};
+        }
+        int left = binarySearch(nums, target);
+        int right = left;
+
+        if (nums.length <= left || left < 0 || nums[left] != target) {
+            return new int[]{-1, -1};
+        }
+        while(right < nums.length && nums[right] == target) {
+            right++;
+        }
+        return new int[]{left, right - 1};
+
+    }
+    public int binarySearch(int[] nums, int target) {
+        int start = 0;
+        int end = nums.length - 1;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+            if (nums[mid] < target) {
+                start = mid + 1;
+            }
+            else {
+                end = mid - 1;
             }
         }
-        int end = -1;
-        for (int i = nums.length - 1; i >= 0; i--) {
-            if (nums[i] == target) {
-                end = i;
-                break;
-            }
-        }
-        return new int[]{start, end};
+        return start;
     }
 }
